@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+.claude/
+.env
+.env.*
+.dev.vars
+node_modules/
+*.zip
+*.tar.gz
