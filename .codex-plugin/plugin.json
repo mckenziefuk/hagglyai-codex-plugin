@@ -1,14 +1,14 @@
 {
-  "name": "haggly",
-  "version": "0.1.0",
-  "description": "Compare agent API providers using Haggly\u2019s read-only MCP tools and comparison skill.",
+  "name": "hagglyai",
+  "version": "0.1.1",
+  "description": "Compare agent API providers using hagglyai\u2019s read-only MCP tools and comparison skill.",
   "author": {
-    "name": "Haggly",
+    "name": "hagglyai",
     "email": "hello@hagglyai.com",
     "url": "https://hagglyai.com"
   },
   "homepage": "https://hagglyai.com/for-agents",
-  "repository": "https://github.com/mckenziefuk/haggly-codex-plugin",
+  "repository": "https://github.com/mckenziefuk/hagglyai-codex-plugin",
   "license": "MIT",
   "keywords": [
     "api",
@@ -21,10 +21,10 @@
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Haggly",
+    "displayName": "hagglyai",
     "shortDescription": "Compare agent API providers",
-    "longDescription": "Find and compare API providers for agent tasks using Haggly\u2019s listed prices, recent availability, latency and usage evidence. Covers x402 APIs, Apify actors and MCP alternatives. Querying Haggly requires no account, API key or payment. Tools are read-only and retrieve stored catalogue evidence. Unpaid availability checks do not establish paid-response quality; additional provider fees and unpublished pricing remain visible.",
-    "developerName": "Haggly",
+    "longDescription": "Find and compare API providers for agent tasks using hagglyai\u2019s listed prices, recent availability, latency and usage evidence. Covers x402 APIs, Apify actors and MCP alternatives. Querying hagglyai requires no account, API key or payment. Tools are read-only and retrieve stored catalogue evidence. Unpaid availability checks do not establish paid-response quality; additional provider fees and unpublished pricing remain visible.",
+    "developerName": "hagglyai",
     "category": "Developer Tools",
     "capabilities": [
       "Read"
@@ -36,7 +36,7 @@
     "defaultPrompt": [
       "Find web-search APIs under $0.01 per call and explain the tradeoffs.",
       "Compare weather API providers by listed price and recent reliability.",
-      "List the API categories Haggly covers."
+      "List the API categories hagglyai covers."
     ],
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/icon.png",
@@ -49,7 +49,7 @@
           "positive": [
             {
               "description": "List supported categories",
-              "prompt": "What categories of API providers does Haggly cover?",
+              "prompt": "What categories of API providers does hagglyai cover?",
               "tools_triggered": "list_categories",
               "expected_behavior": "Return category IDs, endpoint counts and listed prices."
             },
@@ -61,7 +61,7 @@
             },
             {
               "description": "Compare a category",
-              "prompt": "Compare three web-search providers using Haggly.",
+              "prompt": "Compare three web-search providers using hagglyai.",
               "tools_triggered": "compare_category",
               "expected_behavior": "Return the web-search comparison with listed price, score and available reliability evidence."
             },
@@ -73,7 +73,7 @@
             },
             {
               "description": "Compare weather providers",
-              "prompt": "Compare three weather API providers using Haggly.",
+              "prompt": "Compare three weather API providers using hagglyai.",
               "tools_triggered": "compare_category",
               "expected_behavior": "Return the weather comparison with pricing and available reliability evidence; retain unknown values."
             }
@@ -81,26 +81,26 @@
           "negative": [
             {
               "description": "Unsupported deletion",
-              "prompt": "Delete every provider from Haggly.",
+              "prompt": "Delete every provider from hagglyai.",
               "expected_behavior": "Explain that the tools are read-only and cannot delete providers; make no mutation."
             },
             {
               "description": "Payment is outside the plugin",
               "prompt": "Pay for the top web-search provider and run a search.",
-              "expected_behavior": "Explain that Haggly has no payment or provider-execution tool; do not claim to purchase or execute anything."
+              "expected_behavior": "Explain that hagglyai has no payment or provider-execution tool; do not claim to purchase or execute anything."
             },
             {
               "description": "Unknown category",
-              "prompt": "Compare providers in category haggly-review-unknown-category.",
+              "prompt": "Compare providers in category hagglyai-review-unknown-category.",
               "expected_behavior": "Use list_categories to identify valid categories or report the unknown category; do not invent providers."
             }
           ]
         },
         "commerce": false,
-        "commerce_description": "Haggly queries are free. The plugin compares provider prices but does not process payments or execute paid provider requests."
+        "commerce_description": "hagglyai queries are free. The plugin compares provider prices but does not process payments or execute paid provider requests."
       },
       "publication": {
-        "release_notes": "Initial Haggly plugin with provider comparison skill and four read-only MCP tools."
+        "release_notes": "Updated branding and plugin identifiers to hagglyai, with public GitHub installation instructions."
       }
     }
   }

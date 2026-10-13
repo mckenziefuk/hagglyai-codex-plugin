@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
-    "haggly": {
+    "hagglyai": {
       "type": "streamable-http",
       "url": "https://hagglyai.com/mcp"
     }

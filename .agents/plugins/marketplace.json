@@ -1,11 +1,11 @@
 {
-  "name": "haggly-codex-plugins",
+  "name": "hagglyai-codex-plugins",
   "interface": {
-    "displayName": "Haggly"
+    "displayName": "hagglyai"
   },
   "plugins": [
     {
-      "name": "haggly",
+      "name": "hagglyai",
       "source": {
         "source": "local",
         "path": "./"

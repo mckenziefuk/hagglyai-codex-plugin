@@ -12,7 +12,7 @@ Catalogue entries and observed prices can change. Assess results by their field 
 
 On 13 October 2026:
 
-- Codex CLI 0.162.1’s app-server `plugin/read` successfully read the local marketplace and plugin, discovered `haggly:compare`, resolved the image paths and recognized the `haggly` MCP server.
+- Codex CLI 0.162.1’s app-server `plugin/read` successfully read the local marketplace and plugin, discovered `hagglyai:compare`, resolved the image paths and recognized the `hagglyai` MCP server.
 - The skill-creator validator passed for `skills/compare`.
 - MCP initialization and tool discovery succeeded without credentials. All four advertised tools returned populated responses without tool errors in direct protocol calls.
 - A weather category comparison returned populated results. An unknown category returned the expected tool error, and an untracked endpoint returned the expected coverage message.
@@ -23,9 +23,9 @@ Install the package and exercise its five positive and three negative scenarios 
 
 Record an accessible video walkthrough and enter its real URL as `extensions.com.openai.review.demo_recording_url` in both manifests. No demonstration video has been recorded or linked yet.
 
-Upload the ZIP through the OpenAI plugin submission dashboard using the MCP workflow. Select the correct publisher organization and project, resolve automated validation findings, enter the access instructions above in the secure review form, and complete the dashboard’s ownership verification and submission fields. No reviewer credentials are needed for Haggly. Public submission has not been performed.
+Upload the ZIP through the OpenAI plugin submission dashboard using the MCP workflow. Select the correct publisher organization and project, resolve automated validation findings, enter the access instructions above in the secure review form, and complete the dashboard’s ownership verification and submission fields. No reviewer credentials are needed for hagglyai. Public submission has not been performed.
 
-Review the MIT license, publisher details, listing category, support link and policy URLs before publication. The private review repository is https://github.com/mckenziefuk/haggly-codex-plugin. Both manifests include its URL.
+Review the MIT license, publisher details, listing category, support link and policy URLs before publication. The public repository is https://github.com/mckenziefuk/hagglyai-codex-plugin. Both manifests include its URL.
 
 The package uses an existing 180 × 180 square PNG for its listing logo and composer icon. It has no hooks, installation scripts, dependencies or local server.
 

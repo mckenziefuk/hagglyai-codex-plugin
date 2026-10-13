@@ -1,4 +1,4 @@
-# Haggly HTTP interfaces
+# hagglyai HTTP interfaces
 
 Base URL: `https://hagglyai.com/api/v1`. All operations below are public GET requests. The maintained OpenAPI schema is at `https://hagglyai.com/openapi.json`.
 
@@ -25,9 +25,9 @@ Category JSON includes `generatedAt`, `rows`, `topRated`, `bestValue`, `hiddenFl
 | `price-mismatch` | The live payment-response price differs from the catalogue's listed price. | Indicates inconsistent pricing metadata. |
 | `few-repeat-buyers` | At least 20 wallets paid in the last 30 days, averaging fewer than 1.2 calls each: a pattern associated with crawlers or volume farming. | The usage contribution to the score is halved. |
 | `unusual-seller-traffic` | The seller's usage looks potentially manufactured, such as paid calls to trivial endpoints or near-identical payer counts across its endpoints. | The usage contribution to the score is halved. |
-| `test-listing` | The name, host or route identifies a test or demo deployment. | It can remain in results but never becomes the Haggly Pick. |
+| `test-listing` | The name, host or route identifies a test or demo deployment. | It can remain in results but never becomes the hagglyai Pick. |
 
-These warnings describe observed discrepancies or traffic patterns; they do not prove fraud. If both usage warnings apply, the usage contribution is halved once, not twice. Any warning disqualifies an endpoint from the Haggly Pick, even if the comparison does not filter that warning out.
+These warnings describe observed discrepancies or traffic patterns; they do not prove fraud. If both usage warnings apply, the usage contribution is halved once, not twice. Any warning disqualifies an endpoint from the hagglyai Pick, even if the comparison does not filter that warning out.
 
 Equivalent ways to exclude wallet and price mismatches:
 
@@ -41,7 +41,7 @@ The JSON API ignores unknown warning IDs. MCP validates the array against the su
 | --- | --- |
 | `no-usage-data` | The catalogue reports no recent paid usage. This means missing evidence, not necessarily zero usage. |
 | `testnet-only` | The endpoint accepts only testnet USD. Testnet-only listings are excluded from public category comparisons. |
-| `reported-by-apify` | Reliability and usage come from Apify's reported run success and user counts. Haggly cannot check these providers without paying. |
+| `reported-by-apify` | Reliability and usage come from Apify's reported run success and user counts. hagglyai cannot check these providers without paying. |
 
 ## Request examples
 
@@ -49,7 +49,7 @@ Use an HTTP client that encodes query parameters. With curl:
 
 ```sh
 curl --fail --show-error --silent --max-time 20 --get \
-  --user-agent 'haggly-claude-plugin (+https://hagglyai.com/for-agents)' \
+  --user-agent 'hagglyai-codex-plugin (+https://hagglyai.com/for-agents)' \
   --data-urlencode 'task=web search' \
   --data-urlencode 'max_price_usd=0.01' \
   --data-urlencode 'hide_flags=wallet-mismatch,price-mismatch' \
@@ -61,7 +61,7 @@ For an explicit sort:
 
 ```sh
 curl --fail --show-error --silent --max-time 20 --get \
-  --user-agent 'haggly-claude-plugin (+https://hagglyai.com/for-agents)' \
+  --user-agent 'hagglyai-codex-plugin (+https://hagglyai.com/for-agents)' \
   --data-urlencode 'sort=cheapest' \
   --data-urlencode 'limit=5' \
   'https://hagglyai.com/api/v1/categories/web-search'

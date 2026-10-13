@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "haggly": {
+    "hagglyai": {
       "type": "http",
       "url": "https://hagglyai.com/mcp"
     }
