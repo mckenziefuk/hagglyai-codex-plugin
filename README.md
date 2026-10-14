@@ -71,9 +71,18 @@ See [Privacy Policy](https://hagglyai.com/privacy), [Terms of Service](https://h
 
 ## Validation and publication
 
-See [docs/REVIEW.md](docs/REVIEW.md) for access instructions, validation evidence and remaining review work. This is a local draft; the package has not been submitted to OpenAI.
+See [docs/REVIEW.md](docs/REVIEW.md) for access instructions, validation evidence and remaining review work, and [docs/DEMO.md](docs/DEMO.md) for the walkthrough recording plan. The package has not been submitted to OpenAI.
 
-The manifests include eight positive and five negative review scenarios, including sub-category discovery, combined filters and unsupported IDs. These are reviewer expectations, not a claim that every scenario has been exercised through a Codex conversation.
+Version 0.2.1 includes a 512 × 512 PNG icon and exactly five positive and three negative submission scenarios, including sub-category discovery, combined filters and unsupported IDs. Additional proposed scenarios are retained in [docs/additional-review-cases.json](docs/additional-review-cases.json). These are reviewer expectations, not a claim that every scenario has been exercised through a Codex or ChatGPT conversation.
+
+Run package checks with Python 3. To also verify public pages and production filters and write fresh evidence:
+
+```sh
+python3 scripts/validate_submission.py
+python3 scripts/validate_submission.py --live --output docs/validation/latest.json
+```
+
+The live check makes read-only requests to Haggly. It reports missing tool annotations separately; it does not verify the publisher identity, domain ownership, dashboard scans or demo recording.
 
 Official references: [Package your plugin](https://developers.openai.com/plugins/build/plugins), [Submit your plugin](https://developers.openai.com/plugins/deploy/submission).
 

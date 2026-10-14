@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-10-14T09:23:05.006926+00:00",
+  "scope": "Package and direct protocol checks; does not verify model behavior, publisher identity, domain ownership, portal scans or demo video",
+  "checks": [
+    {
+      "name": "Package metadata and assets",
+      "status": "passed",
+      "details": {
+        "version": "0.2.1",
+        "positiveCases": 5,
+        "negativeCases": 3,
+        "iconPixels": [
+          512,
+          512
+        ]
+      }
+    },
+    {
+      "name": "Listing page /",
+      "status": "passed",
+      "details": {
+        "url": "https://hagglyai.com/",
+        "httpStatus": 200,
+        "bytes": 30974,
+        "sha256": "2afe1a431052af91fa868276f794b0491c28bbd00893e947ff87d37dcccc4240",
+        "contentChecks": [
+          "Haggly",
+          "API"
+        ]
+      }
+    },
+    {
+      "name": "Listing page /for-agents",
+      "status": "passed",
+      "details": {
+        "url": "https://hagglyai.com/for-agents",
+        "httpStatus": 200,
+        "bytes": 21683,
+        "sha256": "46e487d80d16e27973257e8903a22214201be777445447d901274d6499cae809",
+        "contentChecks": [
+          "MCP",
+          "Sub-categories"
+        ]
+      }
+    },
+    {
+      "name": "Listing page /privacy",
+      "status": "passed",
+      "details": {
+        "url": "https://hagglyai.com/privacy",
+        "httpStatus": 200,
+        "bytes": 30972,
+        "sha256": "64e6e0fd2fdf4059b90a361e0d6f1ca4607c38448f806faeacbf1d0ca061d00d",
+        "contentChecks": [
+          "Privacy Policy",
+          "Fraser McKenzie",
+          "hello@hagglyai.com",
+          "/mcp"
+        ]
+      }
+    },
+    {
+      "name": "Listing page /terms",
+      "status": "passed",
+      "details": {
+        "url": "https://hagglyai.com/terms",
+        "httpStatus": 200,
+        "bytes": 31111,
+        "sha256": "dfb55b7f7892e7e81cdfb66a85a67a7b7972e881648cc800362b01747708b2c4",
+        "contentChecks": [
+          "Terms of Service",
+          "Fraser McKenzie",
+          "hello@hagglyai.com",
+          "/mcp"
+        ]
+      }
+    },
+    {
+      "name": "Production tool annotations",
+      "status": "needs_action",
+      "details": {
+        "find_best": [
+          "destructiveHint"
+        ],
+        "compare_category": [
+          "destructiveHint"
+        ],
+        "check_endpoint": [
+          "destructiveHint"
+        ],
+        "list_categories": [
+          "destructiveHint"
+        ]
+      }
+    },
+    {
+      "name": "Production MCP and HTTP filters",
+      "status": "passed",
+      "details": {
+        "toolsCalled": [
+          "find_best",
+          "compare_category",
+          "check_endpoint",
+          "list_categories"
+        ],
+        "comparisons": [
+          {
+            "rail": "x402",
+            "rowsVerified": 5,
+            "mcpResponseSha256": "87d77bf7ad7ff777e8f4029c82edb18fc4e117c3c1f1bc61de7728ceecbb6754"
+          },
+          {
+            "rail": "apify",
+            "rowsVerified": 5,
+            "mcpResponseSha256": "20810df303eeac4dc711b33c526f24afbeb9b9d28c2c1d85c731f052c571842f"
+          }
+        ],
+        "bestResponseSha256": "e9f99e60e2d47a117bbe67b1b252b50503806bc10ed06f946403456a7c230877",
+        "endpointResponseSha256": "d481006f4e1041b94f0d072b69f1628a5f48d7418a1f8fab6dcacbf5f10ad170"
+      }
+    }
+  ]
+}
