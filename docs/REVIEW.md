@@ -6,6 +6,8 @@ Connect to `https://hagglyai.com/mcp` using Streamable HTTP. No signup, account,
 
 Call `list_categories` with `{}`. Call `find_best` with `{"task":"web search","max_price_usd":0.01}`. Call `compare_category` with `{"category":"web-search","limit":3}`. Call `check_endpoint` using an exact URL from those results, for example `{"url":"https://stableenrich.dev/api/exa/search"}`.
 
+For sub-category coverage, first verify that `compare_category` advertises `platform`, `task` and `rail`. Discover the `social-media` IDs with `list_categories`, then try `{"category":"social-media","platform":["instagram"],"task":["comments"],"rail":["x402"],"limit":3}` when those values are offered. Also try `find_best` with `{"task":"YouTube transcripts"}` and check the matched category and any automatic widening.
+
 Catalogue entries and observed prices can change. Assess results by their field semantics and evidence, rather than expecting fixed rankings or counts.
 
 ## Checks completed
@@ -17,9 +19,21 @@ On 13 October 2026:
 - MCP initialization and tool discovery succeeded without credentials. All four advertised tools returned populated responses without tool errors in direct protocol calls.
 - A weather category comparison returned populated results. An unknown category returned the expected tool error, and an untracked endpoint returned the expected coverage message.
 
+On 14 October 2026, for the 0.2.0 update:
+
+- The native Codex app-server `plugin/read` resolved the local marketplace, discovered the updated `hagglyai:compare` skill and recognized the bundled `hagglyai` MCP server.
+- The skill-creator validator and Git whitespace checks passed.
+- Haggly's feature checkout passed TypeScript checking and all seven existing `test/integration/subcategories.test.ts` tests. These test tagging, discovery thresholds, filter combinations, automatic narrowing and response formats against local test data, with remote bindings disabled.
+
+## Sub-category rollout
+
+The 0.2.0 package follows the sub-category contract in Haggly's `worktree-more-sources` checkout at commit `6230538`: category discovery, `compare_category` platform/task/rail arrays, automatic `find_best` narrowing, and the corresponding JSON formats.
+
+On 14 October 2026, the production `https://hagglyai.com/mcp` tool list still exposed the older `compare_category` schema without `platform`, `task` or `rail`. The backend feature must be deployed before this package can exercise those filters against production. Packaging changes do not deploy or change the server. Refresh MCP discovery in a new client session after the deployment, then repeat the filtered comparisons and review scenarios.
+
 ## Checks before directory submission
 
-Install the package and exercise its five positive and three negative scenarios through actual Codex or ChatGPT conversations. Check both a fresh session and installation during an existing session. The manifest scenarios are proposed review cases; direct MCP tests do not establish model behavior, such as refusing an unsupported payment or deletion request.
+Install the package and exercise its eight positive and five negative scenarios through actual Codex or ChatGPT conversations. Check both a fresh session and installation during an existing session. The manifest scenarios are proposed review cases; direct MCP tests do not establish model behavior, such as refusing an unsupported payment or deletion request.
 
 Record an accessible video walkthrough and enter its real URL as `extensions.com.openai.review.demo_recording_url` in both manifests. No demonstration video has been recorded or linked yet.
 

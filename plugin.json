@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "hagglyai",
-  "version": "0.1.1",
-  "description": "Compare agent API providers using hagglyai\u2019s read-only MCP tools and comparison skill.",
+  "version": "0.2.0",
+  "description": "Compare agent API providers by category, platform and task using hagglyai’s read-only MCP tools and comparison skill.",
   "author": {
     "name": "hagglyai",
     "email": "hello@hagglyai.com",
@@ -24,7 +24,7 @@
       "interface": {
         "displayName": "hagglyai",
         "shortDescription": "Compare agent API providers",
-        "longDescription": "Find and compare API providers for agent tasks using hagglyai\u2019s listed prices, recent availability, latency and usage evidence. Covers x402 APIs, Apify actors and MCP alternatives. Querying hagglyai requires no account, API key or payment. Tools are read-only and retrieve stored catalogue evidence. Unpaid availability checks do not establish paid-response quality; additional provider fees and unpublished pricing remain visible.",
+        "longDescription": "Find and compare API providers for agent tasks using hagglyai’s listed prices, recent availability, latency and usage evidence. Discover platform and task sub-categories and filter paid rows by x402 or Apify rail. Querying hagglyai requires no account, API key or payment. Tools are read-only and retrieve stored catalogue evidence. Unpaid checks do not establish paid-response quality; additional fees, unknown pricing and any automatic search widening remain visible.",
         "developerName": "hagglyai",
         "category": "Developer Tools",
         "capabilities": [
@@ -36,8 +36,8 @@
         "termsOfServiceURL": "https://hagglyai.com/terms",
         "defaultPrompt": [
           "Find web-search APIs under $0.01 per call and explain the tradeoffs.",
-          "Compare weather API providers by listed price and recent reliability.",
-          "List the API categories hagglyai covers."
+          "Compare Instagram comment providers, limited to x402-labelled endpoints.",
+          "List API categories and available platform and task filters."
         ],
         "composerIcon": "./assets/icon.png",
         "logo": "./assets/icon.png",
@@ -50,7 +50,7 @@
               "description": "List supported categories",
               "prompt": "What categories of API providers does hagglyai cover?",
               "tools_triggered": "list_categories",
-              "expected_behavior": "Return category IDs, endpoint counts and listed prices."
+              "expected_behavior": "Return category IDs, endpoint counts, listed prices and available platform/task sub-category IDs with seller counts."
             },
             {
               "description": "Find web-search providers within a budget",
@@ -75,6 +75,24 @@
               "prompt": "Compare three weather API providers using hagglyai.",
               "tools_triggered": "compare_category",
               "expected_behavior": "Return the weather comparison with pricing and available reliability evidence; retain unknown values."
+            },
+            {
+              "description": "Filter by platform, task and provider rail",
+              "prompt": "Compare Instagram comment providers in social-media, limited to x402-labelled endpoints.",
+              "tools_triggered": "list_categories, compare_category, check_endpoint",
+              "expected_behavior": "Discover supported IDs and check live tool support; use platform=[instagram], task=[comments] and rail=[x402]. Confirm applied restrictions, or report missing support or exact matches. Do not represent category-wide MCP alternatives as filtered matches."
+            },
+            {
+              "description": "Combine alternatives within a platform filter",
+              "prompt": "Compare comment providers for either Instagram or TikTok.",
+              "tools_triggered": "list_categories, compare_category",
+              "expected_behavior": "Discover IDs, then use platform=[instagram,tiktok] and task=[comments]. Explain OR within platform and AND across platform/task; retain the requested restrictions."
+            },
+            {
+              "description": "Infer sub-categories from a natural-language task",
+              "prompt": "Find YouTube transcript providers and explain which filters were used.",
+              "tools_triggered": "find_best, check_endpoint",
+              "expected_behavior": "Include platform and job in the task text; read the matched-category line or JSON subcategories and disclose any automatic widening instead of claiming broader providers are exact matches."
             }
           ],
           "negative": [
@@ -92,6 +110,16 @@
               "description": "Unknown category",
               "prompt": "Compare providers in category hagglyai-review-unknown-category.",
               "expected_behavior": "Use list_categories to identify valid categories or report the unknown category; do not invent providers."
+            },
+            {
+              "description": "Unknown sub-category ID must not silently widen",
+              "prompt": "Compare social-media endpoints using task ID hagglyai-review-unknown-task, and require that task exactly.",
+              "expected_behavior": "Discover valid IDs, explain that the requested ID is unsupported, and do not claim unfiltered rows satisfy it. The service ignores unknown facet IDs."
+            },
+            {
+              "description": "Preserve an exact requirement when search widens",
+              "prompt": "Find Instagram comment providers only. If there are no exact matches, say so rather than switching to other platforms or tasks.",
+              "expected_behavior": "Inspect the filters actually applied by find_best and verify exact platform/task coverage through compare_category. Report no exact matches if filtering is empty; do not hide automatic widening or execute a provider."
             }
           ]
         },
@@ -99,7 +127,7 @@
         "commerce_description": "hagglyai queries are free. The plugin compares provider prices but does not process payments or execute paid provider requests."
       },
       "publication": {
-        "release_notes": "Updated branding and plugin identifiers to hagglyai, with public GitHub installation instructions."
+        "release_notes": "Added platform and task sub-category discovery, paid-rail filtering, HTTP examples and review cases. Preserves explicit user restrictions when searches widen or deployed filters are unavailable."
       }
     }
   }

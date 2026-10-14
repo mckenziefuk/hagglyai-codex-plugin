@@ -1,6 +1,6 @@
 ---
 name: compare
-description: Compare API providers for an agent task using hagglyai's price, uptime, latency and usage data. Use when choosing between x402 endpoints, Apify actors or MCP alternatives, finding a provider within a per-call budget, or checking an endpoint's listed price and recent reliability. hagglyai provides discovery and comparisons; executing the provider's task is a separate operation.
+description: Compare API providers for an agent task using hagglyai's price, uptime, latency and usage data. Use when choosing x402 endpoints, Apify actors or MCP alternatives, narrowing a category by platform and task, finding providers within a per-call budget, or checking a tracked endpoint. hagglyai provides discovery and comparisons; executing the provider's task is a separate operation.
 ---
 
 # Compare API providers with hagglyai
@@ -9,12 +9,27 @@ Use hagglyai's connected MCP server to find providers for the user's task. Its f
 
 ## Choose the query
 
-- For a task such as web search, company enrichment or weather, call `find_best` with a concise task description. Include `max_price_usd` when the user supplies a budget per call. Without a budget, discovery can proceed; say that the results are not budget-filtered rather than inventing a spending limit.
-- For a named category or a broader comparison, use `compare_category`. Call `list_categories` if the category is unknown or `find_best` returns no match. Use a returned category ID to retry, and report when no category fits.
+- For a task such as web search, company enrichment or weather, call `find_best` with a concise task description, including the requested platform and job: for example, "Instagram comments" or "YouTube transcripts". It infers the category and matching sub-categories. Include `max_price_usd` when the user supplies a budget per call. Without a budget, discovery can proceed; say that the results are not budget-filtered rather than inventing a spending limit.
+- For a named category or an explicit platform, task or provider-rail restriction, use `compare_category`. Call `list_categories` to discover the category's current platform and task IDs before filtering. Use returned IDs, not guessed labels, and report when no category fits.
 - For a specific endpoint, use `check_endpoint` with its exact listed URL. It reads hagglyai's existing records, not a new execution of that provider.
 - Set `recent: true` when the user wants endpoints checked within the last seven days. Use `hide_flags` for warnings the user wants excluded. Otherwise retain warnings and explain them.
 
 `find_best` returns up to five options. `compare_category` accepts a limit from 1 to 50 and defaults to 15. Both use hagglyai's best-value ordering. For an explicit cheapest, most-reliable or fastest ordering, use the JSON category API described in [references/api.md](references/api.md); MCP has no `sort` parameter.
+
+## Platform and task sub-categories
+
+Confirm the deployed `compare_category` schema advertises `platform`, `task` and `rail` before sending them. If the server still exposes the older schema, explain that the feature is not available on that server yet. Use HTTP filtering only when its live OpenAPI schema and responses also confirm support; older servers can ignore unknown query parameters and return broader results.
+
+- `platform` identifies where the data comes from or what runs the request. Its display label depends on the category: Platform, Model, Chain, Coin, Data source, Search engine, Marketplace or Source. The input parameter remains `platform` in every category.
+- `task` identifies what an endpoint does, such as comments, transcripts, forecasts or balances. In `compare_category`, this is an array of IDs; in `find_best`, `task` is the plain-language request string. Do not interchange them.
+- Pass MCP arrays, for example `platform: ["instagram", "tiktok"]` and `task: ["comments"]`. Values within one array are alternatives (OR); platform and task restrictions must both match (AND). This example means comments on Instagram or TikTok.
+- `rail: ["x402"]` or `rail: ["apify"]` restricts the paid rows to that provider rail. Omit it for both. This is separate from the platform facet; a blockchain used to pay does not identify the chain an endpoint reads. `mcp` is not a supported paid-rail filter.
+
+The discovery list offers sub-category values represented by at least three different sellers. Counts describe the whole category, not the current filtered result. Endpoints can have several tags or no tags; listings without the selected tags will be excluded. Refresh discovery rather than keeping a copied list of IDs.
+
+Unknown platform and task IDs are ignored by the service and can silently broaden a comparison. Verify applied filters in the returned markdown, or in JSON `selected.platforms` and `selected.tasks`. Check each paid row's `rail` when a rail restriction matters. Category-wide MCP alternatives are not narrowed by these paid-row filters; don't present them as proven matches to a requested platform, task or rail.
+
+`find_best` can widen its search if a narrowed comparison is empty: first it drops task filters, then platform filters. Its matched-category line shows the narrowing actually used; JSON exposes this as `subcategories`. Preserve an explicit user requirement: disclose any widening, then use `compare_category` with the required discovered IDs to check exact coverage. Report no exact matches rather than describing broader results as satisfying the request. Any suggested relaxation should be identified as an alternative.
 
 ## Read the evidence correctly
 

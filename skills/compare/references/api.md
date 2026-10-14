@@ -4,16 +4,47 @@ Base URL: `https://hagglyai.com/api/v1`. All operations below are public GET req
 
 | Route | Purpose | Parameters |
 | --- | --- | --- |
-| `/best` | Match a task and return candidate providers | `task` required (2–300 characters); `max_price_usd`; `limit` 1–25; `hide_flags`; `recent=1`; `format=json` or `format=md` |
-| `/categories` | List category IDs, counts and prices | None |
-| `/categories/{id}` | Compare a category with explicit sorting | `sort=best_value`, `cheapest`, `most_reliable` or `fastest`; `max_price_usd`; `limit` 1–100; `hide_flags`; `recent=1` |
+| `/best` | Match a task, infer platform/task sub-categories and return candidate providers | `task` required (2–300 characters of plain-language text); `max_price_usd`; `limit` 1–25; `hide_flags`; `recent=1`; `format=json` or `format=md` |
+| `/categories` | List category IDs, counts, prices and available sub-category IDs | None |
+| `/categories/{id}` | Compare a category with explicit sorting and filtering | `sort=best_value`, `cheapest`, `most_reliable` or `fastest`; `max_price_usd`; `limit` 1–100; `hide_flags`; `recent=1`; `platform`, `task` and `rail` (comma-separated IDs) |
 | `/endpoints/lookup` | Retrieve stored evidence for an exact endpoint URL | `url` required and URL-encoded |
 
 `max_price_usd` must be positive. `hide_flags` is a comma-separated list of warning IDs. These are filters, not a way to rerank results. Budget caps apply to a call's listed price; unit pricing and additional fees need separate consideration.
 
 `/best` can return `categoryId: null` and category suggestions. An unknown category or untracked endpoint lookup returns HTTP 404. These are coverage limitations, not evidence that a provider is broken. Do not broaden a lookup into arbitrary provider requests.
 
-Category JSON includes `generatedAt`, `rows`, `topRated`, `bestValue`, `hiddenFlags` and `mcpAlternatives`. Row fields distinguish `priceUsd` from `unitPriceUsd`, with `unitsPerCharge` and `unitBasis` explaining the unit assumption. Apify rows can include `startFeeUsd` and `platformUsageExtra`.
+Category JSON includes `generatedAt`, `rows`, `topRated`, `bestValue`, `hiddenFlags`, `subcategories`, `selected` and `mcpAlternatives`. Row fields distinguish `priceUsd` from `unitPriceUsd`, with `unitsPerCharge` and `unitBasis` explaining the unit assumption. Apify rows can include `startFeeUsd` and `platformUsageExtra`. Rows also expose `platforms` and `tasks` arrays.
+
+## Discover and filter sub-categories
+
+Read `/categories` or use MCP `list_categories` for current IDs. JSON category summaries have a `subcategories` array of facets with this shape:
+
+```json
+{
+  "facet": "platform",
+  "values": [
+    { "id": "instagram", "label": "Instagram", "endpoints": 12, "sellers": 4 }
+  ]
+}
+```
+
+The counts above illustrate the format; read live values instead of relying on these numbers. Only values with at least three distinct sellers are offered. Counts cover the full category and do not shrink to the current budget, warning, rail or sub-category filters.
+
+Platforms and tasks have category-specific IDs. A model, chain, coin, data source, search engine or marketplace is passed with `platform`, even when the displayed facet has another name. Use IDs from discovery, not display labels; for example, the X / Twitter ID is `x-twitter`.
+
+| Filter | Category JSON API | MCP `compare_category` | Category pages and markdown |
+| --- | --- | --- | --- |
+| Platform | `platform=instagram,tiktok` | `platform: ["instagram", "tiktok"]` | `platform=instagram&platform=tiktok` |
+| Task | `task=comments` | `task: ["comments"]` | `task=comments` (repeat for more) |
+| Paid provider rail | `rail=x402,apify` | `rail: ["x402", "apify"]` | `rail=x402&rail=apify` |
+
+Within a filter, any selected ID can match. Across platform and task, both restrictions must match. `platform=instagram,tiktok&task=comments&rail=x402` means comments on Instagram or TikTok, limited to rows labelled `x402`. The two supported paid rails are `x402` and `apify`; omitting `rail` includes both. MCP alternatives are listed separately and are not narrowed by these paid-row filters.
+
+Unknown platform/task IDs and unknown HTTP rail IDs are ignored. An empty valid filter applies no restriction, so a typo can return the whole category. MCP rejects rail values outside its `x402`/`apify` enum. Verify the returned `selected.platforms` and `selected.tasks` arrays and each row's `rail` before claiming that results satisfy a restriction. Endpoints without the requested tags are excluded; those tags are inferred from listing wording, not proof that a provider can complete a task.
+
+`/best` uses `task` as plain-language text, rather than a comma-separated task ID filter. It infers sub-categories from that text and can widen an empty result by dropping task restrictions, then platform restrictions. Its top-level `subcategories` object reports the filters actually used. `/best` has no explicit `platform` or `rail` query parameter; use `/categories/{id}` for exact filtering, and keep any user-required restrictions when presenting results.
+
+The sub-category interface requires a server version that advertises these parameters in its live OpenAPI schema and returns the new fields. Older deployments can ignore new query parameters. Missing `selected` is not confirmation that the requested filters were applied.
 
 ## Warning filters and result flags
 
@@ -65,6 +96,31 @@ curl --fail --show-error --silent --max-time 20 --get \
   --data-urlencode 'sort=cheapest' \
   --data-urlencode 'limit=5' \
   'https://hagglyai.com/api/v1/categories/web-search'
+```
+
+For a filtered comparison after confirming these IDs in category discovery:
+
+```sh
+curl --fail --show-error --silent --max-time 20 --get \
+  --user-agent 'hagglyai-codex-plugin (+https://hagglyai.com/for-agents)' \
+  --data-urlencode 'platform=instagram,tiktok' \
+  --data-urlencode 'task=comments' \
+  --data-urlencode 'rail=x402' \
+  --data-urlencode 'sort=cheapest' \
+  --data-urlencode 'limit=5' \
+  'https://hagglyai.com/api/v1/categories/social-media'
+```
+
+The corresponding MCP comparison uses best-value ordering:
+
+```json
+{
+  "category": "social-media",
+  "platform": ["instagram", "tiktok"],
+  "task": ["comments"],
+  "rail": ["x402"],
+  "limit": 5
+}
 ```
 
 Replace the task, category and filters with the user's actual request. When using shell commands, pass their values as safely quoted arguments; do not concatenate user text into executable shell syntax.
